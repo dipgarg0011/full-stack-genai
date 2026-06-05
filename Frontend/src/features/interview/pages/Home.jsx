@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import "../styles/home.scss";
+import { useInterview } from "../hooks/useInterview";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const [jobDescription, setJobDescription] = useState("");
+  const [selfDescription, setSelfDescription] = useState("");
+  const [resumeFile, setResumeFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const { generateReport, loading } = useInterview();
+  const navigate = useNavigate();
+
+  const handleSubmit = async () => {
+    if (!jobDescription.trim() || !selfDescription.trim() || !resumeFile) {
+      alert("Please fill in all fields and upload your resume.");
+      return;
+    }
+
+    const report = await generateReport({ jobDescription, selfDescription, resumeFile });
+
+    if (report && report._id) {
+      navigate(`/interview/${report._id}`);
+    }
+  };
+
   return (
     <div className="page">
 
@@ -29,6 +52,8 @@ const Home = () => {
           <textarea
             id="jobDescription"
             placeholder="Enter job description here..."
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
           />
         </div>
 
@@ -43,13 +68,15 @@ const Home = () => {
 
           <div className="upload-box">
             <label htmlFor="resume">
-              📄 Upload Resume
+              📄 {resumeFile ? resumeFile.name : "Upload Resume"}
             </label>
 
             <input
+              ref={fileInputRef}
               type="file"
               id="resume"
               accept=".pdf,.doc,.docx"
+              onChange={(e) => setResumeFile(e.target.files[0] || null)}
             />
           </div>
 
@@ -61,11 +88,17 @@ const Home = () => {
             <textarea
               id="selfDescription"
               placeholder="Tell us about yourself..."
+              value={selfDescription}
+              onChange={(e) => setSelfDescription(e.target.value)}
             />
           </div>
 
-          <button className="generate-btn">
-            Generate Interview Report
+          <button
+            className="generate-btn"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? "Generating..." : "Generate Interview Report"}
           </button>
 
         </div>

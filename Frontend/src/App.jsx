@@ -1,15 +1,16 @@
-import {RouterProvider} from 'react-router-dom'
-import {router} from './app.routes'
-import {AuthProvider} from "./features/auth/auth.context";
-function App() {
-  
+import { RouterProvider } from "react-router-dom";
+import { router } from "./app.routes";
+import { AuthProvider } from "./features/auth/auth.context";
+import { InterviewProvider } from "./features/interview/interview.context";
 
+function App() {
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <InterviewProvider>
+        <RouterProvider router={router} />
+      </InterviewProvider>
     </AuthProvider>
-    
-  )
+  );
 }
 
-export default App
+export default App;
