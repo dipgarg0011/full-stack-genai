@@ -3,6 +3,10 @@ const PDFDocument = require('pdfkit');
 const { generateInterviewreport } = require('../services/ai.services');
 const InterviewReportModel = require('../models/interviewreport.model');
 
+
+/**
+ * @desc Generate an interview report based on the candidate's resume, self-description, and job description.
+ */
 async function generateReport(req, res) {
     try {
         const resumeFile = req.file;
@@ -69,6 +73,10 @@ async function generateReport(req, res) {
     }
 }
 
+/**
+ * @desc Get a specific interview report by ID. 
+ */
+
 async function getReportById(req, res) {
     try {
         const { interviewId } = req.params;
@@ -111,6 +119,9 @@ async function getReportById(req, res) {
     }
 }
 
+/**
+ * @desc Get all interview reports for the authenticated user.
+ */
 async function getAllReports(req, res) {
     try {
         if (!req.user || !req.user.id) {
@@ -121,9 +132,8 @@ async function getAllReports(req, res) {
         }
 
         const interviewReports = await InterviewReportModel.find({
-            user: req.user.id
-        });
-
+            user: req.user.id});
+            
         return res.status(200).json({
             success: true,
             interviewReports
@@ -254,9 +264,32 @@ async function generateResumePdf(req, res) {
     }
 }
 
+/**
+ * &desc controller for getting a specific interview report by ID.
+ */
+
+async function getInterviewReportById(req, res) {
+
+    const { interviewId } = req.params;
+
+    const interviewReport= await interviewReportModel.findOne({id:interviewId, user: req.user.id});
+
+    if(!interviewReport){
+        return res.status(404).json({
+            success: false,
+            message: "Interview report not found"
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        interviewReport
+    });
+}
+
 module.exports = {
     generateReport,
     getReportById,
     getAllReports,
-    generateResumePdf
+    generateResumePdf,
+    getInterviewReportById
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInterview } from "../hooks/useInterview";
 import "../styles/home.scss";
@@ -37,14 +37,27 @@ const Home = () => {
   return (
     <div className="page">
       <section className="hero">
-        <div className="badge">
-          AI Powered Interview Preparation
-        </div>
+        <div className="badge">AI Powered Interview Preparation</div>
         <h1>Create Your Custom Interview Prep Plan</h1>
         <p>
-          Upload your resume, paste the job description and get a
-          personalized interview roadmap instantly.
+          Upload your resume, paste the job description and get a personalized
+          interview roadmap instantly.
         </p>
+        <button
+          onClick={() => navigate("/history")}
+          style={{
+            marginTop: "1rem",
+            background: "transparent",
+            border: "1px solid #6366f1",
+            color: "#a5b4fc",
+            padding: "0.5rem 1.2rem",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontSize: "0.9rem",
+          }}
+        >
+          📋 View Past Reports
+        </button>
       </section>
 
       <main className="home">
@@ -97,7 +110,11 @@ const Home = () => {
             {loading ? "Generating..." : "Generate Interview Report"}
           </button>
 
-          {error && <p className="error-message" style={{ color: "red" }}>{error}</p>}
+          {error && (
+            <p className="error-message" style={{ color: "red" }}>
+              {error}
+            </p>
+          )}
         </div>
       </main>
     </div>
